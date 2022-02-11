@@ -1,58 +1,47 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
 
 
-matrix = [[112, 42, 83, 119], [56, 125, 56, 49], [15, 78, 101, 43], [62, 98, 114, 108]]
-import numpy as np
-half = len(matrix) // 2
 
-for x in range(len(matrix) // 2, len(matrix)):
-    if sum(matrix[x][:half]) > sum(matrix[x][half:]):
-        line = []
-        for y in range(len(matrix)):
-            line.append(matrix[x][y])
-        for y in range(len(matrix)):
-            matrix[x][y] = line[len(line) - y - 1]
+#
+# Complete the 'flippingMatrix' function below.
+#
+# The function is expected to return an INTEGER.
+# The function accepts 2D_INTEGER_ARRAY matrix as parameter.
+#
 
-matrix = np.transpose(matrix)
+def flippingMatrix(matrix):
+    n = len(matrix)
+    max_sum = 0
+    for x in range(len(matrix) // 2):
+        for y in range(len(matrix)  // 2):
+            top_left = matrix[x][y]
+            top_right = matrix[x][n - y - 1]
+            bot_left = matrix[n - x - 1][y]
+            bot_right = matrix[n - x - 1][n - y - 1]
+            max_sum += max(top_left, top_right, bot_left, bot_right)
+    return max_sum
 
-for x in range(len(matrix) // 2, len(matrix)):
-    if sum(matrix[x][:half]) < sum(matrix[x][half:]):
-        line = []
-        for y in range(len(matrix)):
-            line.append(matrix[x][y])
-        for y in range(len(matrix)):
-            matrix[x][y] = line[len(line) - y - 1]  
-            
-matrix = np.transpose(matrix)
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
 
-for x in range(len(matrix) // 2):
-    if sum(matrix[x][:half]) < sum(matrix[x][half:]):
-        line = []
-        for y in range(len(matrix)):
-            line.append(matrix[x][y])
-        for y in range(len(matrix)):
-            matrix[x][y] = line[len(line) - y - 1]    
-            
-matrix = np.transpose(matrix)
+    q = int(input().strip())
 
-for x in range(len(matrix) // 2):
-    if sum(matrix[x][:half]) < sum(matrix[x][half:]):
-        line = []
-        for y in range(len(matrix)):
-            line.append(matrix[x][y])
-        for y in range(len(matrix)):
-            matrix[x][y] = line[len(line) - y - 1]
+    for q_itr in range(q):
+        n = int(input().strip())
 
-matrix = np.transpose(matrix)      
+        matrix = []
 
-sum_n = 0
-for x in range(len(matrix) // 2):
-    for y in range(len(matrix) // 2):
-        sum_n += matrix[x][y]
+        for _ in range(2 * n):
+            matrix.append(list(map(int, input().rstrip().split())))
 
-print(sum_n)
-#print(matrix[1][half:])  
-#print(matrix)
-#matrix = np.transpose(matrix)
-#print(matrix)
-#matrix = np.transpose(matrix)
-#print(matrix)
+        result = flippingMatrix(matrix)
+
+        fptr.write(str(result) + '\n')
+
+    fptr.close()
