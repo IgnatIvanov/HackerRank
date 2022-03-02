@@ -17,39 +17,14 @@ def balancedSums(arr):
     # Write your code here
     if len(arr) == 1:
         return 'YES'
+    left = 0
+    right = sum(arr[1:])
     
-    if len(arr) == 2:
-        if arr[0] == 0 or arr[1] == 0:
+    for i in range(len(arr) - 1):
+        if right == left:
             return 'YES'
-            
-    if sum(arr[1:]) == 0 or sum(arr[:-1]) == 0:
-        return 'YES'   
-    
-    left = arr.pop(0)
-    right = arr.pop(-1)
-    while len(arr) != 1:
-        if left > right:
-            right += arr.pop(-1)
-        elif left < right:
-            left += arr.pop(0)
-        elif left == right:
-            if len(arr) == 1:
-                return 'YES' 
-            
-            if len(arr) == 2:
-                if arr[0] == 0 or arr[1] == 0:
-                    return 'YES'
-                
-            if sum(arr[1:]) == 0 or sum(arr[:-1]) == 0:
-                return 'YES'
-            
-            left += arr.pop(0)
-            right += arr.pop(-1)
-            continue
-        
-            
-    if left == right:
-        return 'YES'
+        right -= arr[i + 1]
+        left += arr[i]
     return 'NO'
 
 if __name__ == '__main__':
