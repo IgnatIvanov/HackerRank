@@ -19,61 +19,67 @@ def bomberMan(n, grid):
     # Write your code here
     if n == 0:
         return grid
-    time_line = [[] for i in range(5)]
     
-    for i in range(5):
-        if i == 0:
-            new_grid = []
-            for x in range(len(grid)):
-                new_line =[]
-                for y in range(len(grid[x])):
-                    if grid[x][y] == '.':                        
-                        new_line.append(-1)
-                    elif grid[x][y] == 'O':                        
-                        new_line.append(3)
-                new_grid.append(new_line)
-            time_line[i] = new_grid
-            continue
-        
-        time_line[i] = time_line[i - 1]
-        for x in range(len(time_line[i])):
-            for y in range(len(time_line[i][x])):
-                time_line[i][x][y] -= 1
-                
-        for x in range(len(time_line[i])):
-            for y in range(len(time_line[i][x])):
-                if time_line[i][x][y] == 0:
-                    if x != 0: 
-                        if time_line[i][x - 1][y] != 0:
-                            time_line[i][x - 1][y] = -1
-                    if x != len(time_line[i]) - 1:
-                        if time_line[i][x + 1][y] != 0:
-                            time_line[i][x + 1][y] = -1
-                    if y != 0: 
-                        if time_line[i][x][y - 1] != 0:
-                            time_line[i][x][y - 1] = -1
-                    if y != len(time_line[i]) - 1:
-                        if time_line[i][x][y + 1] != 0:
-                            time_line[i][x][y + 1] = -1                                
+    list_grid = []
+    for x in range(len(grid)):
+        new_line = []
+        for y in range(len(grid[x])):
+            new_line.append(0)
+        list_grid.append(new_line)
             
+    
+    for x in range(len(grid)):
+        for y in range(len(grid[x])):
+            if grid[x][y] == '.':                        
+                list_grid[x][y] = -1
+            elif grid[x][y] == 'O':                        
+                list_grid[x][y] = 3
+                
+    for i in range(1, n + 1):
+        for x in range(len(list_grid)):  ## Timer count
+            for y in range(len(list_grid[x])):
+                list_grid[x][y] -= 1 
+        
+        
+        for x in range(len(list_grid)):  ## Bombs detonation
+            for y in range(len(list_grid[x])):
+                if list_grid[x][y] == 0:
+                    if x != 0: 
+                        if list_grid[x - 1][y] != 0:
+                            list_grid[x - 1][y] = -1
+                    if x != len(list_grid) - 1:
+                        if list_grid[x + 1][y] != 0:
+                            list_grid[x + 1][y] = -1
+                    if y != 0: 
+                        if list_grid[x][y - 1] != 0:
+                            list_grid[x][y - 1] = -1
+                    if y != len(list_grid[x]) - 1:
+                        if list_grid[x][y + 1] != 0:
+                            list_grid[x][y + 1] = -1
+                            
         if i % 2 == 0:  #Bomberman is planting bombs
-            for x in range(len(time_line[i])):
-                for y in range(len(time_line[i][x])):
-                    if time_line[i][x][y] <= 0:
-                        time_line[i][x][y] = 3
-                        
-    time_line[0] = time_line[4]
-    return [str(time_line[(n % 4)][x]) for x in range(len(time_line[(n % 4)]))]
-    res_grid = time_line[n % 4]
-    result = []
-    for x in range(len(res_grid)):
-        new_line = ''
-        for y in range(len(res_grid[x])):
-            if res_grid[x][y] <= 0:
+            for x in range(len(list_grid)):
+                for y in range(len(list_grid[x])):
+                    if list_grid[x][y] <= 0:
+                        list_grid[x][y] = 3
+        
+        if i == n:
+            break
+        if i % 4 == (n % 4) + 0:
+            if i != 1:
+                break   
+      
+    result = []  
+    for x in range(len(grid)):
+        new_line = str()
+        for y in range(len(grid[x])):
+            if list_grid[x][y] <= 0:
                 new_line += '.'
-            elif res_grid[x][y] > 0:
+            elif list_grid[x][y] > 0:
                 new_line += 'O'
         result.append(new_line)
+        
+        
     return result
 
 if __name__ == '__main__':
