@@ -1,0 +1,14 @@
+def sherlockAndAnagrams(s):
+    frequency = {}
+    anagramsFound = 0
+    
+    for i in range(len(s) - 1, 0, -1):
+        for j in range(len(s) - i + 1):
+            substr = s[j:i + j]
+            key = str(''.join(sorted(substr))) 
+            frequency[key] = frequency.get(key, 0) + 1
+            
+    for freq, count in frequency.items():
+        anagramsFound += (count * (count - 1)) // 2
+            
+    return anagramsFound
